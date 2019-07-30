@@ -1,42 +1,34 @@
-/* eslint-disable react/no-multi-comp */
-import React from 'react';
+import React, { createContext, useState, useContext } from 'react';
 
-const StoreContext = React.createContext();
-const createStore = WrappedComponent => (
-  class extends React.Component {
-    constructor(props) {
-      super(props);
-      this.state = {
-        // eslint-disable-next-line react/destructuring-assignment
-        get: key => this.state[key],
-        set: (key, value) => {
-          this.setState({ [key]: value });
-        },
-        remove: (key) => {
-          this.setState({ [key]: undefined });
-        }
-      };
-    }
+const StoreContext = createContext();
 
-    render() {
-      return (
-        <StoreContext.Provider value={this.state}>
-          <WrappedComponent {...this.props} />
-        </StoreContext.Provider>
-      );
-    }
-  });
+const createStore = (WrappedComponent) => {
+  return function StoreProvider(props) {
+    const [state, setState] = useState({});
 
-const withStore = WrappedComponent => (
-  class extends React.Component {
-    render() {
-      return (
-        <StoreContext.Consumer>
-          {context => <WrappedComponent store={context} {...this.props} />}
-        </StoreContext.Consumer>
-      );
-    }
-  }
-);
+    const store = {
+      get: (key) => state[key],
+      set: (key, value) => setState(prevState => ({ ...prevState, [key]: value })),
+      remove: (key) => {
+        const newState = { ...state };
+        delete newState[key];
+        setState(newState);
+      },
+    };
+
+    return (
+      <StoreContext.Provider value={store}>
+        <WrappedComponent store={store} {...props} />
+      </StoreContext.Provider>
+    );
+  };
+};
+
+const withStore = (WrappedComponent) => {
+  return function Wrapper(props) {
+    const store = useContext(StoreContext);
+    return <WrappedComponent store={store} {...props} />;
+  };
+};
 
 export { StoreContext, createStore, withStore };
