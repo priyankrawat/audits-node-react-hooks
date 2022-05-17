@@ -1,41 +1,41 @@
 const Router = require('express-promise-router');
 const _ = require('lodash');
-const Posts = require('../../components/posts');
+const Projects = require('../../components/projects');
 const auth = require('../../components/auth/helpers');
 
 module.exports = (app) => {
   const router = Router();
-  const posts = Posts(app);
+  const projects = Projects(app);
 
   // Create
   router.post('/', auth.authenticate, async (req, res) => {
-    const data = await posts.create(req.user, _.pick(req.body, 'content', 'title'));
+    const data = await projects.create(req.user, _.pick(req.body, 'content', 'title'));
     res.json(data);
   });
 
   // Get all
   router.get('/', auth.authenticate, async (req, res) => {
-    const data = await posts.get();
+    const data = await projects.get();
     res.json(data);
   });
 
   // Get one
   router.get('/:id(\\d+)', auth.authenticate, async (req, res) => {
-    const data = await posts.getOne(req.params.id);
+    const data = await projects.getOne(req.params.id);
     res.json(data);
   });
 
   // Update
   router.put('/:id(\\d+)', auth.authenticate, async (req, res) => {
-    const data = await posts.update(req.params.id, _.pick(req.body, 'content', 'title'));
+    const data = await projects.update(req.params.id, _.pick(req.body, 'content', 'title'));
     res.json(data);
   });
 
   // Delete
   router.delete('/:id(\\d+)', auth.authenticate, async (req, res) => {
-    const data = await posts.delete(req.params.id);
+    const data = await projects.delete(req.params.id);
     res.json(data);
   });
 
-  return Router().use('/posts', router);
+  return Router().use('/projects', router);
 };

@@ -160,3 +160,21 @@ This endpoint updates an existing Post by ID. The input/output formats are the s
 
 ### `DELETE /api/posts/:id`: Delete a Post by ID
 This endpoint deletes an individual Post by ID. The ID is provided as a URI parameter.
+
+
+# Notes
+
+`createdb starter_postgres_express_react` before running seeds
+
+Sample .env that works:
+
+```
+DB_NAME=starter_postgres_express_react
+DB_USER=anthony
+DB_PASSWORD=
+DB_HOST=localhost
+DB_PORT=5432
+#DB_ENABLE_SSL=1
+JWT_SECRET=starter
+```
+

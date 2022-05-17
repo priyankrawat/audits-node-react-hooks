@@ -1,12 +1,12 @@
 exports.shorthands = undefined;
 
 exports.up = (pgm) => {
-  pgm.dropColumn('posts', 'author');
-  pgm.addColumns('posts', {
-    user_id: {
+  pgm.addColumns('projects', {
+    owner_id: {
       type: 'integer'
     }
   });
+  pgm.createIndex('projects', 'owner_id');
 };
 
 exports.down = () => {
