@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-
 import API from '../../api/api';
 
 function ProjectAdd({ refreshTable }) {

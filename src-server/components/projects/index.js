@@ -11,11 +11,21 @@ module.exports = (app) => {
   };
 
   // Get all
-  module.get = async () => db.query('select p.*, u.email as owner from projects p left join users u ON p.owner_id=u.id');
+  module.get = async () => db.query(`
+    SELECT p.*,
+      u.email AS owner
+    FROM projects p
+    LEFT JOIN users u ON p.owner_id=u.id
+  `);
 
   // Get one
   module.getOne = async (id) => db.query(
-    'select p.*, u.email as author from projects p left join users u ON p.owner_id=u.id where p.id=$1',
+    `SELECT p.*,
+       u.email AS author
+     FROM projects p
+     LEFT JOIN users u ON p.owner_id=u.id
+     WHERE p.id=$1
+    `,
     [id],
     { single: true }
   );

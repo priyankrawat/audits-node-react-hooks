@@ -9,7 +9,7 @@ module.exports = (app) => {
 
   // Create
   router.post('/', auth.authenticate, async (req, res) => {
-    const data = await projects.create(req.user, _.pick(req.body, 'content', 'title'));
+    const data = await projects.create(req.user, _.pick(req.body, 'description', 'title'));
     res.json(data);
   });
 
@@ -27,7 +27,7 @@ module.exports = (app) => {
 
   // Update
   router.put('/:id(\\d+)', auth.authenticate, async (req, res) => {
-    const data = await projects.update(req.params.id, _.pick(req.body, 'content', 'title'));
+    const data = await projects.update(req.params.id, _.pick(req.body, 'description', 'title'));
     res.json(data);
   });
 
