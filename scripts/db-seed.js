@@ -8,6 +8,7 @@ require('../config/env');
 const DB = require('../src-server/db');
 const auth = require('../src-server/components/auth/helpers');
 
+const tableAudits = 'audits';
 const tableProjects = 'projects';
 const tableUsers = 'users';
 
@@ -15,6 +16,20 @@ const createRecordProject = (db, table, user) => db[table].insert({
   title: faker.commerce.product(),
   description: faker.lorem.text(),
   owner_id: user.id,
+});
+
+const createRecordAudit = (db, table, user) => db[table].insert({
+  event: _.sample([
+    'authentication:logout',
+    'authentication:new',
+    'invoice:create',
+    'invoice:send',
+    'settings:change',
+  ]),
+  status: _.sample(['started', 'in progress', 'finished', 'error']),
+  message: faker.lorem.text(),
+  context: {},
+  user_id: user.id,
 });
 
 function openDB() {
@@ -38,6 +53,22 @@ function seedProjects(db, users) {
   return Promise.all(records);
 }
 
+function seedAudits(db, users) {
+  // Seed with fake data
+  console.log('Seeding [audits]...');
+  const records = [];
+  try {
+    for (let i = 1; i <= 100; i += 1) {
+      const user = users[_.random(users.length - 1)];
+      records.push(createRecordAudit(db, tableAudits, user));
+    }
+  } catch (e) {
+    console.error(e);
+  }
+
+  return Promise.all(records);
+}
+
 function seedUsers(db) {
   console.log('Seeding [users]...');
   const users = [{
@@ -45,6 +76,11 @@ function seedUsers(db) {
     password: auth.createHash('password'),
     firstName: 'User',
     lastName: 'Test'
+  }, {
+    email: 'test2@example.com',
+    password: auth.createHash('password'),
+    firstName: 'User',
+    lastName: 'Test 2'
   }];
 
   return db[tableUsers].insert(users);
@@ -53,7 +89,10 @@ function seedUsers(db) {
 function seed(db) {
   // Run seeding functions
   return seedUsers(db)
-    .then(users => seedProjects(db, users))
+    .then((users) => Promise.all([
+      seedProjects(db, users),
+      seedAudits(db, users),
+    ]))
     .then(() => {
       console.log('Successfully completed the seeding process');
     });

@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-import ProjectsContainer from './components/projects/projects-container';
+import PostsContainer from './components/posts/posts-container';
 import SignIn from './components/auth/sign-in';
 import SignUp from './components/auth/sign-up';
 import Header from './components/header';
@@ -15,15 +15,21 @@ import API from './api/api';
 
 // Define the main app using hooks
 const App = ({ store }) => {
-  const user = store.get('user');
-  if (!user) {
-    API.get('auth/me').then(({ data }) => {
-      store.set('user', data);
-    }).catch(() => {
-      store.set('user', {});
-    });
-    return null;
-  }
+  const [user, setUser] = useState(store.get('user') || {});
+
+  useEffect(() => {
+    if (!user.id) {
+      API.get('auth/me').then(({ data }) => {
+        store.set('user', data);
+        setUser(data);
+      }).catch(() => {
+        store.set('user', {});
+        setUser({});
+      });
+    }
+  }, [user, store]);
+
+  if (!user.id) return null;
 
   return (
     <Router>
@@ -39,7 +45,6 @@ const App = ({ store }) => {
           and save to reload.
         </p>
         <div className="container">
-          <div>
           <div>
             <PrivateRoute exact path="/" component={PostsContainer} />
             <Route path="/sign_in" component={SignIn} />
