@@ -6,8 +6,9 @@ module.exports = (app) => {
   module.get = async (filters) => db.query(`
     SELECT *
     FROM audits
-    WHERE message ILIKE '%${filters.message}%'
-  `);
+    WHERE message ILIKE $1
+  `,
+  [`%${filters.message}%`]);
 
   return module;
 };
