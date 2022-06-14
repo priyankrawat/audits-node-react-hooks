@@ -91,6 +91,7 @@
     "seed": "npm run db:seed",
     "client:dev": "node scripts/start-client-dev.js",
     "server:dev": "nodemon --watch src-server scripts/start-server-dev.js",
+    "server:dev:debug": "nodemon --inspect --watch src-server scripts/start-server-dev.js",
     "server:prod": "node scripts/start-server-prod.js",
     "dev": "concurrently \"npm run server:dev\" \"npm run client:dev\"",
     "pg-migrate": "node-pg-migrate",

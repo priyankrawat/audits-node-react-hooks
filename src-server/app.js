@@ -6,6 +6,7 @@ const passport = require('passport');
 const DB = require('./db.js');
 const apiAudits = require('./routes/api/audits');
 const apiProjects = require('./routes/api/projects');
+const apiSettings = require('./routes/api/settings');
 const apiAuth = require('./routes/auth');
 
 module.exports = async () => {
@@ -39,6 +40,7 @@ module.exports = async () => {
   app.use('/auth', apiAuth(app));
   app.use('/api', apiProjects(app));
   app.use('/api', apiAudits(app));
+  app.use('/api', apiSettings(app));
 
   /*
   app.use('/', (req, res) => {
