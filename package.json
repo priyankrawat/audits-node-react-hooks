@@ -98,7 +98,7 @@
     "db:migrate": "node scripts/db-migrate",
     "db:seed": "npm run db:migrate && node scripts/db-seed.js",
     "test:client": "node scripts/test.js --env=jsdom",
-    "test:server": "node scripts/test.js --config=config/jest/server.json",
+    "test:server": "node scripts/test.js --config=config/jest/server.json --runInBand",
     "update-version": "npm --no-git-tag-version version patch"
   },
   "husky": {
